@@ -3,7 +3,7 @@ sudo: true
 dist: trusty
 before_install:
   - git clone https://github.com/uzzi1234/TestProject.git scripts
-  - chmod a+x ./scripts/*.sh
+  - chmod a+x ./Scripts/*.sh
 install:
   - travis_retry ./scripts/install.sh
   - ./scripts/restructure-project.sh
