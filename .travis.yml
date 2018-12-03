@@ -2,7 +2,6 @@ language: generic
 sudo: true
 dist: trusty
 before_install:
-  - sudo apt-get install libsoup libarchive libpng
   - git clone https://github.com/uzzi1234/TestProject.git scripts
   - chmod a+x ./scripts/*.sh
 install:
