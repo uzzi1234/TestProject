@@ -2,12 +2,12 @@ language: generic
 sudo: true
 dist: trusty
 before_install:
-  - git clone https://github.com/uzzi1234/TestProject.git scripts
+  - git clone https://github.com/uzzi1234/TestProject.git Scripts
   - chmod a+x ./Scripts/*.sh
 install:
-  - travis_retry ./scripts/install.sh
-  - ./scripts/restructure-project.sh
+  - travis_retry ./Scripts/install.sh
+  - ./Scripts/restructure-project.sh
 script:
-  - ./scripts/build.sh && ./scripts/run-tests.sh
+  - ./Scripts/build.sh && ./Scripts/run-tests.sh
 after_success:
-  - ./scripts/notify-discord.sh
+  - ./Scripts/notify-discord.sh
