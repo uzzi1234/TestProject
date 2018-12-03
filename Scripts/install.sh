@@ -20,4 +20,4 @@ install() {
     --install-location=$install_dir
 }
 
-install "https://netstorage.unity3d.com/unity/4550892b6062/Windows64EditorInstaller/UnitySetup64-2018.2.18f1.exe?_ga=2.56070318.425486085.1543824043-598057053.1543824043"
+install "https://netstorage.unity3d.com/unity/4550892b6062/MacEditorInstaller/Unity-2018.2.18f1.pkg?_ga=2.26643640.425486085.1543824043-598057053.1543824043"
