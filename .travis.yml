@@ -2,7 +2,7 @@ language: generic
 sudo: true
 dist: trusty
 before_install:
-  - git clone https://github.com/uzzi1234/TestProject.git Scripts
+  - git clone https://github.com/uzzi1234/TestProject.git scripts
   - chmod a+x ./Scripts/*.sh
 install:
   - travis_retry ./Scripts/install.sh
