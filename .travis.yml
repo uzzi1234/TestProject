@@ -1,11 +1,14 @@
-language: objective-c
-osx_image: xcode8.1
-rvm:
-- 2.2
+language: generic
+sudo: true
+dist: trusty
 before_install:
-- chmod a+x ./Script/install.sh
-- chmod a+x ./Script/build.sh
+  - sudo apt-get install libsoup libarchive libpng
+  - git clone https://github.com/uzzi1234/TestProject.git scripts
+  - chmod a+x ./scripts/*.sh
 install:
-- ./Script/install.sh
+  - travis_retry ./scripts/install.sh
+  - ./scripts/restructure-project.sh
 script:
-- ./Script/build.sh
+  - ./scripts/build.sh && ./scripts/run-tests.sh
+after_success:
+  - ./scripts/notify-discord.sh

@@ -1,29 +1,23 @@
-#!/bin/sh
-
-BASE_URL=http://netstorage.unity3d.com/unity
-HASH=46dda1414e51
-VERSION=2017.2.0f3
+#! /bin/bash
 
 download() {
-  file=$1
-  url="$BASE_URL/$HASH/$package"
-
   echo "Downloading from $url: "
-  curl -o `basename "$package"` "$url"
+  curl -o $package "$url"
 }
 
 install() {
-  package=$1
-  download "$package"
+  url=$1
+  package=`basename $url`
+  install_dir="$(pwd)/Unity3D"
+  component_list="component_list.txt"
+  download
 
-  echo "Installing "`basename "$package"`
-  sudo installer -dumplog -package `basename "$package"` -target /
+  echo "Installing $package to $install_dir"
+  chmod +x $package
+  echo y | ./$package \
+    --unattended \
+    --components='Unity' \
+    --install-location=$install_dir
 }
 
-# See $BASE_URL/$HASH/unity-$VERSION-$PLATFORM.ini for complete list
-# of available packages, where PLATFORM is `osx` or `win`
-
-install "MacEditorInstaller/Unity-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Linux-Support-for-Editor-$VERSION.pkg"
+install "http://beta.unity3d.com/download/3c89f8d277f5/UnitySetup-2017.3.0f1"

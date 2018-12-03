@@ -1,42 +1,38 @@
-#!/bin/sh
+#! /bin/bash
 
-project="TestProject"
+build_dir=$(pwd)/build
+build_name=$build_dir/ci-build
+project_path=$(pwd)/Project
+log_file=$build_dir/unity.log
 
-echo "Attempting to build $project for Windows"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+mkdir -p $build_dir
+
+echo "Project Directory:"
+ls $project_path/Assets
+
+error_code=0
+
+echo "Building project."
+./Unity3D/Editor/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildWindowsPlayer "$(pwd)/Build/windows/$project.exe" \
+  -force-free \
+  -logFile $log_file \
+  -projectPath $project_path \
+  -buildLinuxUniversalPlayer $build_name \
   -quit
 
-echo "Attempting to build $project for OS X"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
-  -batchmode \
-  -nographics \
-  -silent-crashes \
-  -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildOSXUniversalPlayer "$(pwd)/Build/osx/$project.app" \
-  -quit
+if [ $? = 0 ] ; then
+  echo "Build completed successfully."
+  error_code=0
+else
+  echo "Building failed. Exited with $?."
+  error_code=1
+fi
 
-echo "Attempting to build $project for Linux"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
-  -batchmode \
-  -nographics \
-  -silent-crashes \
-  -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project.exe" \
-  -quit
+echo 'Build logs:'
+cat $log_file
 
-echo 'Logs from build'
-cat $(pwd)/unity.log
-
-
-echo 'Attempting to zip builds'
-zip -r $(pwd)/Build/linux.zip $(pwd)/Build/linux/
-zip -r $(pwd)/Build/mac.zip $(pwd)/Build/osx/
-zip -r $(pwd)/Build/windows.zip $(pwd)/Build/windows/
+echo "Finishing with code $error_code"
+exit $error_code
