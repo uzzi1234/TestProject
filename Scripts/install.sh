@@ -20,4 +20,4 @@ install() {
     --install-location=$install_dir
 }
 
-install "http://beta.unity3d.com/download/3c89f8d277f5/UnitySetup-2017.3.0f1"
+install "https://netstorage.unity3d.com/unity/4550892b6062/Windows64EditorInstaller/UnitySetup64-2018.2.18f1.exe?_ga=2.56070318.425486085.1543824043-598057053.1543824043"
