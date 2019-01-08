@@ -35,20 +35,20 @@ public class Jenkins
             return;
         }
         // Find all enabled scenes in the project and put them into a string array
-        List sceneList = new List();
+        Boo.Lang.List sceneList = new Boo.Lang.List();
         foreach (EditorBuildSettingsScene ebs in EditorBuildSettings.scenes)
         {
             if (ebs.enabled)
                 sceneList.Add(ebs.path);
         }
         // If we have nothing to build then exit
-        string[] scenes = sceneList.ToArray();
+        var scenes = sceneList.ToArray();
         if (scenes == null || scenes.Length == 0)
         {
             Debug.Log("ERROR: No scenes enabled so there's nothing to build");
             return;
         }
         // Start the build
-        BuildPipeline.BuildPlayer(scenes, path, targetPlatform, BuildOptions.None);
+        BuildPipeline.BuildPlayer((UnityEditor.EditorBuildSettingsScene[])scenes, path, targetPlatform, BuildOptions.None);
     }
 }
