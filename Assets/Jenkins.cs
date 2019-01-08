@@ -1,54 +1,94 @@
 using UnityEditor;
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-public class Jenkins
+
+class BuildScript
 {
-    /// 
+    static string[] SCENES = FindEnabledEditorScenes();
 
-    /// Single command to trigger the full build for iOS
-    /// 
-    static void CommandLineBuildiOS()
+    static string APP_NAME = "AngryBots";
+    static string TARGET_DIR = "target";
+
+    static void PerformAllBuilds()
     {
-        Build(BuildTarget.iOS, "build/iOS");
+        PerformMacOSXBuild();
+        PerformWindowsBuild();
+        PerformWebStreamingBuild();
+        PerformWebBuild();
+        PerformAndroidBuild();
+        PerformiOSBuild();
     }
-    /// 
 
-    /// Single command to trigger the full build for Android
-    /// 
-    static void CommandLineBuildAndroid()
+    static void PerformMacOSXBuild()
     {
-        Build(BuildTarget.Android, "build/Android");
+        string target_dir = APP_NAME;
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, build_target: BuildTarget.StandaloneOSXUniversal, build_options: BuildOptions.None);
     }
-    /// 
 
-    /// Find all enabled scenes and start a build for the given platform
-    /// 
-    /// Unity target platform
-    /// Path in which to do the build
-    static void Build(UnityEditor.BuildTarget targetPlatform, string path)
+    static void PerformWindowsBuild()
     {
-        // Path must be specified
-        if (path == null)
+        string target_dir = APP_NAME + ".exe";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneWindows, BuildOptions.None);
+    }
+
+    static void PerformLinuxBuild()
+    {
+        string target_dir = "linux";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.StandaloneLinux, BuildOptions.None);
+    }
+
+    static void PerformWebStreamingBuild()
+    {
+        string target_dir = "webstreaming";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.WebPlayerStreamed, BuildOptions.None);
+    }
+
+    static void PerformWebBuild()
+    {
+        string target_dir = "web";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.WebPlayer, BuildOptions.None);
+    }
+
+    static void PerformWebGLBuild()
+    {
+        string target_dir = "webgl";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.WebGL, BuildOptions.None);
+    }
+
+    static void PerformAndroidBuild()
+    {
+        //Set the path to the Android SDK on the machine, since Unity cannot retain the state properly
+        AndroidSDKFolder.Path = "${ANDROID_HOME}";
+        string target_dir = APP_NAME + ".apk";
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, BuildTarget.Android, BuildOptions.None);
+    }
+
+    static void PerformiOSBuild()
+    {
+        string target_dir = "iOS";
+        //We do not build the xcodeproject in the target directory, since we do not want to archive the
+        //entire xcode project, but instead build with XCode, then output the .ipa through Jenkins
+        GenericBuild(SCENES, target_dir, BuildTarget.iOS, BuildOptions.None);
+    }
+
+    private static string[] FindEnabledEditorScenes()
+    {
+        List<string> EditorScenes = new List<string>();
+        foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
         {
-            Debug.Log("ERROR: No build path specified");
-            return;
+            if (!scene.enabled) continue;
+            EditorScenes.Add(scene.path);
         }
-        // Find all enabled scenes in the project and put them into a string array
-        Boo.Lang.List sceneList = new Boo.Lang.List();
-        foreach (EditorBuildSettingsScene ebs in EditorBuildSettings.scenes)
+        return EditorScenes.ToArray();
+    }
+
+    static void GenericBuild(string[] scenes, string target_dir, BuildTarget build_target, BuildOptions build_options)
+    {
+        EditorUserBuildSettings.SwitchActiveBuildTarget(build_target);
+        string res = BuildPipeline.BuildPlayer(scenes, target_dir, build_target, build_options);
+        if (res.Length > 0)
         {
-            if (ebs.enabled)
-                sceneList.Add(ebs.path);
+            throw new Exception("BuildPlayer failure: " + res);
         }
-        // If we have nothing to build then exit
-        var scenes = sceneList.ToArray();
-        if (scenes == null || scenes.Length == 0)
-        {
-            Debug.Log("ERROR: No scenes enabled so there's nothing to build");
-            return;
-        }
-        // Start the build
-        BuildPipeline.BuildPlayer((UnityEditor.EditorBuildSettingsScene[])scenes, path, targetPlatform, BuildOptions.None);
     }
 }
