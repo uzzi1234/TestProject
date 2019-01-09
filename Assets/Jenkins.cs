@@ -1,31 +1,32 @@
-using UnityEditor;
 using UnityEngine;
-using UnityEditor.Build.Reporting;
+using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
-// Output the build size or a failure depending on BuildPlayer.
+public static class Jenkins {
 
-public class BuildPlayerExample : MonoBehaviour
-{
-    [MenuItem("Build/Build iOS")]
-    public static void MyBuild()
+    static string GetProjectName()
     {
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/SampleScene.unity" };
-        buildPlayerOptions.locationPathName = "iOSBuild";
-        buildPlayerOptions.target = BuildTarget.iOS;
-        buildPlayerOptions.options = BuildOptions.None;
+        string[] s = Application.dataPath.Split('/');
+        return s[s.Length - 2];
+    }
 
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-        BuildSummary summary = report.summary;
+    static string[] GetScenePaths()
+    {
+        string[] scenes = new string[EditorBuildSettings.scenes.Length];
 
-        if (summary.result == BuildResult.Succeeded)
+        for(int i = 0; i < scenes.Length; i++)
         {
-            Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+            scenes[i] = EditorBuildSettings.scenes[i].path;
         }
 
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
-        }
+        return scenes;
+    }
+    [MenuItem("File/AutoBuilder/iOS")]
+    static void PerformiOSBuild ()
+    {
+        EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.iPhone);
+        BuildPipeline.BuildPlayer(GetScenePaths(), "Builds/iOS",BuildTarget.iPhone,BuildOptions.None);
     }
 }
