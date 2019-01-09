@@ -1,9 +1,11 @@
-﻿<Properties StartupConfiguration="{4CE07701-134F-9DD0-F36C-F385BB4D61DF}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Jenkins.cs">
+﻿<Properties StartupConfiguration="{08040F8A-BE5E-F84B-7CE2-9F08EB1167BF}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Editor/Jenkins.cs">
     <Files>
-      <File FileName="Assets/Jenkins.cs" Line="38" Column="1" />
+      <File FileName="Assets/Editor/Jenkins.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/Jenkins.cs" Line="15" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp-Editor PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
