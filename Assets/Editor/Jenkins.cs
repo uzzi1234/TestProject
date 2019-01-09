@@ -22,7 +22,7 @@ class BuildScript
     static void PerformMacOSXBuild()
     {
         string target_dir = APP_NAME;
-        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, build_target: BuildTarget.StandaloneOSXUniversal, build_options: BuildOptions.None);
+        GenericBuild(SCENES, TARGET_DIR + "/" + target_dir, build_target: BuildTarget.StandaloneOSX, build_options: BuildOptions.None);
     }
 
     static void PerformWindowsBuild()
